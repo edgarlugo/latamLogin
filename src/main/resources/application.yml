@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: latam-login
+
+latam:
+  login-api:
+    url: ${LOGIN_API_URL:https://www.ficcion.cl/ws/api/login}
+    locale: ES-es
+    connect-timeout: 5s
+    read-timeout: 10s

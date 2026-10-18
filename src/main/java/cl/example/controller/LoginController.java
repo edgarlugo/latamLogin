@@ -1,37 +1,39 @@
 package cl.example.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import cl.example.model.Response;
-import cl.example.model.User;
+
+import cl.example.model.LoginForm;
 import cl.example.service.LoginService;
+import jakarta.validation.Valid;
 
 @Controller
 public class LoginController {
-	@Autowired
-	private LoginService service;
 
-	@PostMapping("/login")
-	public Response Login(@ModelAttribute User user) {
-		System.out.println("login:" + user.getLogin());
-		System.out.println("password:" + user.getPassword());
-		Response response = service.Login(user.getLogin(), user.getPassword());
-		System.out.println("Respuesta de la Api de Login es: "+response);
-		return response;
+	private final LoginService service;
+
+	public LoginController(LoginService service) {
+		this.service = service;
 	}
 
-	@GetMapping(value = "/")
-	public String index(Model model) {
+	@GetMapping("/")
+	public String index(@ModelAttribute("loginForm") LoginForm loginForm) {
 		return "login";
 	}
 
-	@ModelAttribute(value = "user")
-	public User user() {
-		return new User();
+	@PostMapping("/login")
+	public String login(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult,
+			Model model) {
+		if (!bindingResult.hasErrors()) {
+			model.addAttribute("result", service.login(loginForm.getLogin(), loginForm.getPassword()));
+		}
+		// Nunca devolver la contraseña a la vista
+		loginForm.setPassword(null);
+		return "login";
 	}
 
 }
