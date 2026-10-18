@@ -2,12 +2,14 @@ package cl.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-public class Latam1Application {
+@ConfigurationPropertiesScan
+public class LatamLoginApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Latam1Application.class, args);
+		SpringApplication.run(LatamLoginApplication.class, args);
 	}
 
 }
